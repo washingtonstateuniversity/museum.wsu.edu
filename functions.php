@@ -6,10 +6,15 @@ class WSU_Museum_Theme {
 	 */
 	public function __construct() {
 		add_action( 'init', array( $this, 'register_exhibit_content_type' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
 		if ( class_exists( 'MultiPostThumbnails' ) ) {
 			add_action( 'after_setup_theme', array( $this, 'setup_additional_post_thumbnails' ), 11 );
 		}
+	}
+
+	public function enqueue_scripts() {
+		wp_enqueue_script( 'wsu-cycle', get_template_directory_uri() . '/js/cycle2/jquery.cycle2.min.js', array( 'jquery' ), spine_get_script_version(), true );
 	}
 
 	/**
@@ -65,5 +70,40 @@ class WSU_Museum_Theme {
 		new MultiPostThumbnails( $slide_two_args );
 		new MultiPostThumbnails( $slide_three_args );
 	}
+
+	public function has_thumbnail( $type ) {
+		if ( class_exists( 'MultiPostThumbnails' ) ) {
+			return MultiPostThumbnails::has_post_thumbnail( get_post_type(), $type );
+		}
+		return false;
+	}
+
+	public function get_thumbnail( $type ) {
+		if ( class_exists( 'MultiPostThumbnails' ) ) {
+			return MultiPostThumbnails::get_post_thumbnail_url( get_post_type(), $type, get_the_ID(), 'spine-xlarge-size' );
+		}
+
+		return '';
+	}
 }
-new WSU_Museum_Theme();
+$wsu_museum_theme = new WSU_Museum_Theme();
+
+function wsu_museum_get_slides() {
+	global $wsu_museum_theme;
+
+	$slide_images = array();
+
+	if ( spine_has_featured_image() ) {
+		$slide_images[] = spine_get_featured_image_src();
+	}
+
+	if ( $wsu_museum_theme->has_thumbnail( 'slide-two' ) ) {
+		$slide_images[] = $wsu_museum_theme->get_thumbnail( 'slide-two' );
+	}
+
+	if ( $wsu_museum_theme->has_thumbnail( 'slide-three' ) ) {
+		$slide_images[] = $wsu_museum_theme->get_thumbnail( 'slide-three' );
+	}
+
+	return $slide_images;
+}
