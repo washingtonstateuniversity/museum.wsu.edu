@@ -3,6 +3,10 @@
 class WSU_Museum_Theme {
 	public function __construct() {
 		add_action( 'init', array( $this, 'register_exhibit_content_type' ) );
+
+		if ( class_exists( 'MultiPostThumbnails' ) ) {
+			add_action( 'after_setup_theme', array( $this, 'setup_additional_post_thumbnails' ), 11 );
+		}
 	}
 
 	public function register_exhibit_content_type() {
@@ -32,6 +36,28 @@ class WSU_Museum_Theme {
 			'query_var'         => true,
 			'menu_icon'         => 'dashicons-images-alt',
 		) );
+	}
+
+	/**
+	 * Add support for additional post thumbnails to be used when generating the
+	 * slider at the top of museum exhibits. Requires that the Multiple Post
+	 * Thumbnail plugin be enabled.
+	 */
+	public function setup_additional_post_thumbnails() {
+		$slide_two_args = array(
+			'post_type' => 'museum-exhibit',
+			'label' => 'Slide Two',
+			'id' => 'slide-two',
+		);
+
+		$slide_three_args = array(
+			'post_type' => 'museum-exhibit',
+			'label' => 'Slide Three',
+			'id' => 'slide-three',
+		);
+
+		new MultiPostThumbnails( $slide_two_args );
+		new MultiPostThumbnails( $slide_three_args );
 	}
 }
 new WSU_Museum_Theme();
