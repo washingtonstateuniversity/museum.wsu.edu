@@ -28,7 +28,7 @@ class WSU_Museum_Theme {
 			'show_in_nav_menus' => true,
 			'supports'          => array( 'title', 'editor', 'thumbnail' ),
 			'has_archive'       => true,
-			'rewrite'           => array( 'exhibit' ),
+			'rewrite'           => array( 'slug' => 'exhibit' ),
 			'query_var'         => true,
 			'menu_icon'         => 'dashicons-images-alt',
 		) );
