@@ -1,6 +1,9 @@
 <?php
 
 class WSU_Museum_Theme {
+	/**
+	 * Setup the hooks used in the theme.
+	 */
 	public function __construct() {
 		add_action( 'init', array( $this, 'register_exhibit_content_type' ) );
 
@@ -9,6 +12,9 @@ class WSU_Museum_Theme {
 		}
 	}
 
+	/**
+	 * Register the content type to handle museum exhibits.
+	 */
 	public function register_exhibit_content_type() {
 		register_post_type( 'museum-exhibit', array(
 			'labels'            => array(
