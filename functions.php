@@ -6,8 +6,9 @@ class WSU_Museum_Theme {
 	 */
 	public function __construct() {
 		add_action( 'init', array( $this, 'register_exhibit_content_type' ) );
+		add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 10, 2 );
+		add_action( 'save_post', array( $this, 'save_post' ), 10, 2 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
-
 		if ( class_exists( 'MultiPostThumbnails' ) ) {
 			add_action( 'after_setup_theme', array( $this, 'setup_additional_post_thumbnails' ), 11 );
 		}
@@ -56,6 +57,57 @@ class WSU_Museum_Theme {
 	}
 
 	/**
+	 * Add the necessary meta boxes on the proper page view.
+	 *
+	 * @param string  $post_type The type of post being edited.
+	 * @param WP_Post $post      The post object of the post being edited.
+	 */
+	public function add_meta_boxes( $post_type, $post ) {
+		if ( 'museum-exhibit' !== $post_type ) {
+			return;
+		}
+		add_meta_box( 'museum_exhibit_artist', 'Artist Text', array( $this, 'display_artist_text_meta_box' ), 'museum-exhibit', 'normal' );
+	}
+
+	public function display_artist_text_meta_box( $post ) {
+		$artist = $this->get_exhibit_artist( $post->ID );
+
+		?>
+		<label for="artist_text">Artist:</label>
+		<input type="text" name="artist_text" value="<?php echo esc_attr( $artist ); ?>" class="widefat" />
+		<p class="description">Enter the text that should display for the artist or collection name under the exhibit headline.</p>
+		<?php
+	}
+
+	/**
+	 * Save overlay type when the front page is saved.
+	 *
+	 * @param int     $post_id ID of the post currently being saved.
+	 * @param WP_Post $post    Object of the post being saved.
+	 */
+	public function save_post( $post_id, $post ) {
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return;
+		}
+
+		if ( 'museum-exhibit' !== $post->post_type ) {
+			return;
+		}
+
+		if ( 'auto-draft' === $post->post_status ) {
+			return;
+		}
+
+		if ( ! isset( $_POST['artist_text'] ) ) {
+			return;
+		}
+
+		update_post_meta( $post_id, '_exhibit_artist_text', sanitize_text_field( $_POST['artist_text'] ) );
+
+		return;
+	}
+
+	/**
 	 * Add support for additional post thumbnails to be used when generating the
 	 * slider at the top of museum exhibits. Requires that the Multiple Post
 	 * Thumbnail plugin be enabled.
@@ -91,8 +143,25 @@ class WSU_Museum_Theme {
 
 		return '';
 	}
+
+	public function get_exhibit_artist( $post_id ) {
+		$artist = get_post_meta( $post_id, '_exhibit_artist_text', true );
+
+		return $artist;
+	}
 }
 $wsu_museum_theme = new WSU_Museum_Theme();
+
+/**
+ * Retrieve the text used to display an exhibit's artist.
+ *
+ * @return string
+ */
+function wsu_museum_get_exhibit_artist() {
+	global $wsu_museum_theme;
+
+	return $wsu_museum_theme->get_exhibit_artist( get_the_ID() );
+}
 
 function wsu_museum_get_slides() {
 	global $wsu_museum_theme;
