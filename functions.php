@@ -13,8 +13,14 @@ class WSU_Museum_Theme {
 		}
 	}
 
+	/**
+	 * Enqueue scripts used by the Museum theme.
+	 */
 	public function enqueue_scripts() {
-		wp_enqueue_script( 'wsu-cycle', get_template_directory_uri() . '/js/cycle2/jquery.cycle2.min.js', array( 'jquery' ), spine_get_script_version(), true );
+		// Ensure the slideshow script is enqueued on individual exhibit pages.
+		if ( is_singular( 'museum-exhibit' ) ) {
+			wp_enqueue_script( 'wsu-cycle', get_template_directory_uri() . '/js/cycle2/jquery.cycle2.min.js', array( 'jquery' ), spine_get_script_version(), true );
+		}
 	}
 
 	/**
