@@ -8,22 +8,22 @@
  Version:        0.0.1
 */
 
-.cycle-slideshow {
+.single-museum-exhibit .cycle-slideshow {
 	width: 100%;
 	height: 600px;
 }
 
-.exhibit-banner-slide {
+.single-museum-exhibit .exhibit-banner-slide {
 	width: 100%;
 	height: 100%;
 	display: none;
 }
 
-.exhibit-banner-slide:first-of-type {
+.single-museum-exhibit .exhibit-banner-slide:first-of-type {
 	display: block;
 }
 
-.cycle-pager {
+.single-museum-exhibit .cycle-pager {
 	position: absolute;
 	bottom: 0;
 	z-index: 12000;
