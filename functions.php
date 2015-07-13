@@ -66,14 +66,21 @@ class WSU_Museum_Theme {
 		if ( 'museum-exhibit' !== $post_type ) {
 			return;
 		}
+		add_meta_box( 'museum_exhibit_artist', 'Artist Text', array( $this, 'display_artist_text_meta_box' ), 'museum-exhibit', 'normal', 'high' );
+		add_meta_box( 'museum_gallery_content', 'Gallery Content', array( $this, 'display_gallery_content_meta_box' ), 'museum-exhibit', 'normal' );
 		add_meta_box( 'museum_sidebar_content', 'Sidebar Content', array( $this, 'display_sidebar_content_meta_box' ), 'museum-exhibit', 'normal' );
-		add_meta_box( 'museum_exhibit_artist', 'Artist Text', array( $this, 'display_artist_text_meta_box' ), 'museum-exhibit', 'normal' );
 	}
 
 	public function display_sidebar_content_meta_box( $post ) {
 		$content = $this->get_sidebar_content( $post->ID );
 
 		wp_editor( $content, 'exhibit_sidebar_content' );
+	}
+
+	public function display_gallery_content_meta_box( $post ) {
+		$content = $this->get_gallery_content( $post->ID );
+
+		wp_editor( $content, 'exhibit_gallery_content' );
 	}
 
 	public function display_artist_text_meta_box( $post ) {
@@ -112,6 +119,11 @@ class WSU_Museum_Theme {
 		if ( isset( $_POST['exhibit_sidebar_content'] ) ) {
 			$content = wp_kses_post( $_POST['exhibit_sidebar_content'] );
 			update_post_meta( $post_id, '_exhibit_sidebar_content', $content );
+		}
+
+		if ( isset( $_POST['exhibit_gallery_content'] ) ) {
+			$content = wp_kses_post( $_POST['exhibit_gallery_content'] );
+			update_post_meta( $post_id, '_exhibit_gallery_content', $content );
 		}
 
 		return;
@@ -160,6 +172,12 @@ class WSU_Museum_Theme {
 		return $content;
 	}
 
+	public function get_gallery_content( $post_id ) {
+		$content = get_post_meta( $post_id, '_exhibit_gallery_content', true );
+
+		return $content;
+	}
+
 	public function get_exhibit_artist( $post_id ) {
 		$artist = get_post_meta( $post_id, '_exhibit_artist_text', true );
 
@@ -177,6 +195,17 @@ function wsu_museum_get_sidebar_content() {
 	global $wsu_museum_theme;
 
 	return $wsu_museum_theme->get_sidebar_content( get_the_ID() );
+}
+
+/**
+ * Retrieve the gallery content for an exhibit.
+ *
+ * @return string
+ */
+function wsu_museum_get_gallery_content() {
+	global $wsu_museum_theme;
+
+	return $wsu_museum_theme->get_gallery_content( get_the_ID() );
 }
 
 /**

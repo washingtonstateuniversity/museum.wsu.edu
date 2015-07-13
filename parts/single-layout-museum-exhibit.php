@@ -15,3 +15,9 @@
 	</div>
 
 </section>
+
+<section class="row single gutter pad-ends museum-gallery">
+	<div class="column one">
+		<?php echo apply_filters( 'the_content', wsu_museum_get_gallery_content() ); ?>
+	</div>
+</section>
