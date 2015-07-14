@@ -1,22 +1,14 @@
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 
-	<header class="article-header">
-		<hgroup>
-			<?php if ( is_single() ) : ?>
-				<?php if ( spine_get_option( 'articletitle_show' ) == 'true' ) : ?>
-					<h1 class="article-title"><?php the_title(); ?></h1>
-					<h2 class="article-artist"><?php echo esc_html( wsu_museum_get_exhibit_artist() ); ?></h2>
-				<?php endif; ?>
-			<?php else : ?>
+	<?php if ( ! is_single() ) : ?>
+		<header class="article-header">
+			<hgroup>
 				<h2 class="article-title">
 					<a href="<?php the_permalink(); ?>" rel="bookmark"><?php the_title(); ?></a>
 				</h2>
 				<h3 class="article-artist"><?php echo esc_html( wsu_museum_get_exhibit_artist() ); ?></h3>
-			<?php endif;  ?>
-		</hgroup>
-	</header>
-
-	<?php if ( ! is_singular() ) : ?>
+			</hgroup>
+		</header>
 		<div class="article-summary">
 			<?php
 
