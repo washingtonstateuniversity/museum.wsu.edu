@@ -1,3 +1,10 @@
+<header class="row single article-header">
+	<hgroup>
+		<h1 class="article-title"><?php the_title(); ?></h1>
+		<h2 class="article-artist"><?php echo esc_html( wsu_museum_get_exhibit_artist() ); ?></h2>
+	</hgroup>
+</header>
+
 <section class="row side-right gutter pad-ends">
 
 	<div class="column one">
