@@ -1,5 +1,12 @@
 <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+	<?php
 
+			if ( spine_has_thumbnail_image() ) {
+				?><figure class="article-thumbnail"><a href="<?php the_permalink(); ?>"><?php spine_the_thumbnail_image(); ?></a></figure><?php
+			} elseif ( spine_has_featured_image() ) {
+				?><figure class="article-thumbnail"><a href="<?php the_permalink(); ?>"><?php the_post_thumbnail( 'spine-thumbnail_size' ); ?></a></figure><?php
+			}
+			?>
 	<?php if ( ! is_single() ) : ?>
 		<header class="article-header">
 			<hgroup>
@@ -10,14 +17,8 @@
 			</hgroup>
 		</header>
 		<div class="article-summary">
+		
 			<?php
-
-			if ( spine_has_thumbnail_image() ) {
-				?><figure class="article-thumbnail"><a href="<?php the_permalink(); ?>"><?php spine_the_thumbnail_image(); ?></a></figure><?php
-			} elseif ( spine_has_featured_image() ) {
-				?><figure class="article-thumbnail"><a href="<?php the_permalink(); ?>"><?php the_post_thumbnail( 'spine-thumbnail_size' ); ?></a></figure><?php
-			}
-
 			// If a manual excerpt is available, default to that. If `<!--more-->` exists in content, default
 			// to that. If an option is set specifically to display excerpts, default to that. Otherwise show
 			// full content.
