@@ -30,7 +30,7 @@
 }
 
 .headerfloat {
-	top: -64px;
+	top: -64px !important;
 }
 
 .cycle-pager {
