@@ -28,3 +28,13 @@
 	bottom: 0;
 	z-index: 12000;
 }
+
+.headerfloat {
+	top: -64px;
+}
+
+.cycle-pager {
+	position: relative;
+	top: -50px;
+	z-index: 9999;
+}
